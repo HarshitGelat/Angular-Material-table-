@@ -1,0 +1,87 @@
+<div class="example-header">
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+</div>
+
+<div class="example-container mat-elevation-z8">
+
+  <mat-table [dataSource]="dataSource" matSort>
+
+
+    <!-- Check Column -->
+    <ng-container matColumnDef="checked">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="onSelectionChageForAll()" [(ngModel)]="checkAllRow"></mat-checkbox>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox [(ngModel)]="row.checked" (change)="onSelectionChageForRow()"></mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Progress Column -->
+    <ng-container matColumnDef="progress">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Progress </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.progress}}% </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container matColumnDef="color">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Color </mat-header-cell>
+      <mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </mat-cell>
+    </ng-container>
+
+    <!-- File column -->
+    <ng-container matColumnDef="file">
+      <mat-header-cell *matHeaderCellDef> File </mat-header-cell>
+      <mat-cell *matCellDef="let i = index">
+
+
+
+        <mat-icon onclick="document.getElementById('getFile').click()"
+          *ngIf="users[i].file === null || users[i].file === undefined" style="cursor:pointer">cloud_upload
+        </mat-icon>
+        <input type="file"  id="getFile"  (change)="onFileChange($event, i)"
+     style="display:none"/>
+
+        <div *ngIf="!(users[i].file === null || users[i].file === undefined)">
+
+          <mat-chip [selectable]="true" style="paddding: 10px" [removable]="true" (removed)="removeFile(i)"
+            [ngModelOptions]="{standalone: true}">
+            {{users[i].file.name}}
+            <mat-icon matChipRemove>
+              cancel</mat-icon>
+          </mat-chip>
+        </div>
+
+      </mat-cell>
+    </ng-container>
+
+    <!-- Download column  -->
+    <ng-container matColumnDef="download">
+      <mat-header-cell *matHeaderCellDef> Download </mat-header-cell>
+      <mat-cell *matCellDef="let i = index">
+
+        <mat-icon (click)="clickDownload(i)" style="cursor:pointer">cloud_download</mat-icon>
+
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;">
+    </mat-row>
+  </mat-table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+
+
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+  Use of this source code is governed by an MIT-style license that
+  can be found in the LICENSE file at http://angular.io/license -->
